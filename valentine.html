@@ -13,6 +13,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
     .card {
@@ -20,13 +21,14 @@
       padding: 40px;
       border-radius: 20px;
       text-align: center;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-      max-width: 400px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+      max-width: 420px;
       width: 90%;
       display: none;
+      position: relative;
     }
 
-    .card.active {
+    .active {
       display: block;
     }
 
@@ -37,16 +39,65 @@
       border: none;
       border-radius: 30px;
       cursor: pointer;
-    }
-
-    .primary {
       background: #e63946;
       color: white;
     }
 
     .secondary {
       background: #777;
+    }
+
+    /* Number circles */
+    .numbers {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .circle {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: #ffccd5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+
+    .circle:hover {
+      transform: scale(1.1);
+      background: #ff8fab;
       color: white;
+    }
+
+    .error {
+      color: red;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 24px;
+      animation: floatUp 6s linear infinite;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-110vh);
+        opacity: 0;
+      }
     }
   </style>
 </head>
@@ -56,41 +107,100 @@
   <!-- PAGE 1 -->
   <div class="card active" id="page1">
     <h2>Someone has a special message for you 💖</h2>
-    <button class="primary" onclick="goTo('page2')">Click me 💕</button>
+    <button onclick="goTo('page2')">Click me 💕</button>
   </div>
 
   <!-- PAGE 2 -->
   <div class="card" id="page2">
     <h2>Hey Chittukala Shanmuganathan 💘</h2>
     <p>Do you like me? 😘</p>
-    <button class="primary" onclick="goTo('page3')">Yes 💕</button>
+    <button onclick="goTo('page3')">Yes 💕</button>
     <button class="secondary" onclick="goTo('pageNo')">No 😅</button>
-  </div>
-
-  <!-- PAGE 3 (YES) -->
-  <div class="card" id="page3">
-    <h2>Yes 😍 Right answer!</h2>
-    <p>
-      How much do you like me<br />
-      on a scale of <b>1 to 10</b>? 💖
-    </p>
   </div>
 
   <!-- NO PAGE -->
   <div class="card" id="pageNo">
-    <h3>I know how smart you are 😌</h3>
     <p>
+      I know how smart you are 😌<br /><br />
       So go back to the previous screen<br />
       and click <b>Yes</b>, my wife 💍💖
     </p>
-    <button class="primary" onclick="goTo('page2')">Back 🔙</button>
+    <button onclick="goTo('page2')">Back 🔙</button>
+  </div>
+
+  <!-- PAGE 3 -->
+  <div class="card" id="page3">
+    <h2>Yes 😍 Right answer!</h2>
+    <p>How much do you like me<br />on a scale of <b>1 to 10</b>? 💖</p>
+
+    <div class="numbers">
+      <div class="circle" onclick="wrong()">1</div>
+      <div class="circle" onclick="wrong()">2</div>
+      <div class="circle" onclick="wrong()">3</div>
+      <div class="circle" onclick="wrong()">4</div>
+      <div class="circle" onclick="wrong()">5</div>
+      <div class="circle" onclick="wrong()">6</div>
+      <div class="circle" onclick="wrong()">7</div>
+      <div class="circle" onclick="wrong()">8</div>
+      <div class="circle" onclick="wrong()">9</div>
+      <div class="circle" onclick="goTo('page4')">10</div>
+    </div>
+
+    <div id="error" class="error"></div>
+  </div>
+
+  <!-- PAGE 4 -->
+  <div class="card" id="page4">
+    <h2>Brilliant 😍</h2>
+    <p>
+      That’s the right answer 💖<br /><br />
+      Can you come into my life? 💍
+    </p>
+    <button onclick="goTo('pageYes')">Yes 💕</button>
+    <button class="secondary" onclick="goTo('pageNo2')">No 😬</button>
+  </div>
+
+  <!-- YES FINAL -->
+  <div class="card" id="pageYes">
+    <h1>Happy Valentine’s Day 💖</h1>
+    <h2>Chittu 😘🌹</h2>
+  </div>
+
+  <!-- NO FINAL -->
+  <div class="card" id="pageNo2">
+    <p>
+      Please share this link with <b>Roju</b> 😄<br /><br />
+      Thank you for your time 💐
+    </p>
   </div>
 
   <script>
     function goTo(pageId) {
-      const pages = document.querySelectorAll(".card");
-      pages.forEach(page => page.classList.remove("active"));
+      document.querySelectorAll(".card").forEach(p => p.classList.remove("active"));
       document.getElementById(pageId).classList.add("active");
+
+      if (pageId === "pageYes") {
+        startHearts();
+      }
+    }
+
+    function wrong() {
+      document.getElementById("error").innerText =
+        "Wrong Answer ❌ Please select the right answer 💕";
+    }
+
+    function startHearts() {
+      setInterval(() => {
+        const heart = document.createElement("div");
+        const emojis = ["❤️", "💖", "💕", "💘", "🌹", "😘"];
+        heart.className = "heart";
+        heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = 20 + Math.random() * 25 + "px";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 6000);
+      }, 300);
     }
   </script>
 
