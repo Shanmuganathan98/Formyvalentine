@@ -2,18 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>For My Valentine 💖</title>
+  <title>For You 💖</title>
 
   <style>
     body {
       margin: 0;
       height: 100vh;
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
     }
 
     .card {
@@ -22,125 +21,78 @@
       border-radius: 20px;
       text-align: center;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-      animation: popIn 1s ease;
       max-width: 400px;
+      width: 90%;
+      display: none;
     }
 
-    h1 {
-      color: #e63946;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 18px;
-      color: #444;
+    .card.active {
+      display: block;
     }
 
     button {
-      margin-top: 20px;
-      padding: 15px 30px;
+      margin: 12px;
+      padding: 14px 28px;
       font-size: 18px;
       border: none;
-      border-radius: 50px;
+      border-radius: 30px;
       cursor: pointer;
+    }
+
+    .primary {
       background: #e63946;
       color: white;
-      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 10px 20px rgba(230, 57, 70, 0.5);
-    }
-
-    #message {
-      margin-top: 25px;
-      font-size: 22px;
-      color: #e63946;
-      display: none;
-      animation: fadeIn 1s ease forwards;
-    }
-
-    .heart {
-      position: fixed;
-      bottom: -20px;
-      font-size: 24px;
-      animation: floatUp 6s linear infinite;
-      opacity: 0.8;
-    }
-
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-110vh) rotate(360deg);
-        opacity: 0;
-      }
-    }
-
-    @keyframes popIn {
-      from {
-        transform: scale(0.6);
-        opacity: 0;
-      }
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .secondary {
+      background: #777;
+      color: white;
     }
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <h1>Happy Valentine’s day 💘</h1>
-    <p>Someone has a special message for you…</p>
-    <button onclick="showLove()">Click me 💕</button>
-    <div id="message">
-      Hey Chittukala Shanmuganathan 💖<br />
-      Thank you for coming into my life. You make my heart smile 😘🌹
-    </div>
+
+  <!-- PAGE 1 -->
+  <div class="card active" id="page1">
+    <h2>Someone has a special message for you 💖</h2>
+    <button class="primary" onclick="goTo('page2')">Click me 💕</button>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="card" id="page2">
+    <h2>Hey Chittukala Shanmuganathan 💘</h2>
+    <p>Do you like me? 😘</p>
+    <button class="primary" onclick="goTo('page3')">Yes 💕</button>
+    <button class="secondary" onclick="goTo('pageNo')">No 😅</button>
+  </div>
+
+  <!-- PAGE 3 (YES) -->
+  <div class="card" id="page3">
+    <h2>Yes 😍 Right answer!</h2>
+    <p>
+      How much do you like me<br />
+      on a scale of <b>1 to 10</b>? 💖
+    </p>
+  </div>
+
+  <!-- NO PAGE -->
+  <div class="card" id="pageNo">
+    <h3>I know how smart you are 😌</h3>
+    <p>
+      So go back to the previous screen<br />
+      and click <b>Yes</b>, my wife 💍💖
+    </p>
+    <button class="primary" onclick="goTo('page2')">Back 🔙</button>
   </div>
 
   <script>
-    function showLove() {
-      const msg = document.getElementById("message");
-      msg.style.display = "block";
-
-      for (let i = 0; i < 25; i++) {
-        createHeart();
-      }
-    }
-
-    function createHeart() {
-      const heart = document.createElement("div");
-      const emojis = ["❤️", "💖", "💕", "💘", "🌹", "😘"];
-      heart.classList.add("heart");
-      heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = 3 + Math.random() * 4 + "s";
-      heart.style.fontSize = 20 + Math.random() * 20 + "px";
-
-      document.body.appendChild(heart);
-
-      setTimeout(() => {
-        heart.remove();
-      }, 7000);
+    function goTo(pageId) {
+      const pages = document.querySelectorAll(".card");
+      pages.forEach(page => page.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
     }
   </script>
+
 </body>
 </html>
